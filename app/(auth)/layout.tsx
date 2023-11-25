@@ -2,13 +2,14 @@
 import Link from 'next/link'
 import { ConfigProvider } from 'antd'
 import { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react';
+
 
 
 import '@/app/globals.css'
 
 import theme from '@/theme/themeConfig'
 import StyledComponentsRegistry from '@/lib/AntdRegistry'
-import Provider from '../Provider';
 
 
 export default function SessionLayout({
@@ -19,7 +20,7 @@ export default function SessionLayout({
     return (
         <html lang="en">
             <body className=''>
-                <Provider session={session}>
+                <SessionProvider session={session}>
                     <StyledComponentsRegistry >
                         <ConfigProvider theme={{
                             ...theme,
@@ -52,7 +53,7 @@ export default function SessionLayout({
                             </div>
                         </ConfigProvider>
                     </StyledComponentsRegistry>
-                </Provider>
+                </SessionProvider>
             </body>
         </html>
     )
