@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 
-
 const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
 
     return await NextAuth(req, res, {
@@ -31,13 +30,7 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
 
                     const user = await res.json();
 
-                    console.log("User is: " + JSON.stringify(user));
-
-
                     if (res.ok && user) {
-
-                        console.log("return user: " + user);
-                        
                         return user;
                     }
 
@@ -46,32 +39,30 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
             })
         ],
         callbacks: {
-            async jwt({ token, user }) {
-                
+            async jwt({ token, user, account }) {
+                console.log("account", account);
+
                 if (user && 'accessToken' in user) {
-                    console.log("user in jwt: " + JSON.stringify(user));
-                    
                     token.accessToken = user.accessToken;
                 }
 
-                return { token };
+                return token;
             },
             session({ session, token, user }) {
-
-                session.user = token as any;
-
-                console.log("session is:", session);
-                
+                session.accessToken = token.accessToken as string;
+                console.log("Session", session);
                 return session
-            }
+            },
+
         },
         pages: {
-            signIn: '/login/page',
-            // signOut: '/login/page',
+            signIn: '/login',
+            signOut: '/login',
             // error: '/auth/error',
             // verifyRequest: '/auth/verify-request', // (used for check email message)
             // newUser: '/auth/new-user'
-        }
+        },
+        secret: process.env.NEXTAUTH_SECRET
     })
 }
 
