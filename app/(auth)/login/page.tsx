@@ -2,11 +2,9 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Checkbox, Form, Input, message } from 'antd'
 import { useSession, signIn } from 'next-auth/react'
-import { useSearchParams, useRouter } from "next/navigation";
-
-
+import { useRouter } from "next/navigation";
 
 type SignInType = {
     email?: string;
@@ -15,33 +13,44 @@ type SignInType = {
 }
 
 export default function Signin() {
+    const router = useRouter()
 
     const { data: session, status } = useSession()
 
     console.log("session: " + JSON.stringify(session));
     console.log("status: " + JSON.stringify(status));
 
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/";
-
-
     const onFinish = async (values: any) => {
         console.log('Success:', values);
 
-        const res = await signIn("credentials", {
-            redirect: false,
-            email: values.email,
-            password: values.password,
-            callbackUrl,
-        })
+        try {
+            const res = await signIn("credentials", {
+                redirect: false,
+                email: values.email,
+                password: values.password,
+            }).then(({ ok, error }: any) => {
+                console.log(ok, error);
 
-        console.log(res);
+                if (ok) {
+                    message.success('Login successfully', 2)
+                    router.push("/");
+                } else {
+                    console.log(error)
+                    message.error('Login failed. Please check your email and password!')
+                }
+            })
+
+            console.log(res);
+        } catch (error) {
+            console.error('Login failed:', error);
+            message.error('Login failed. Please check your email and password!');
+        }
+
     }
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     }
-
 
     return (
         <>
