@@ -1,13 +1,14 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Session } from 'next-auth'
+import { signOut, SessionProvider, useSession } from 'next-auth/react';
 import { Layout, Menu, MenuProps, theme } from 'antd'
-import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined, ShoppingCartOutlined, FileAddOutlined, OrderedListOutlined } from '@ant-design/icons';
+import { DesktopOutlined, PieChartOutlined, TeamOutlined, UserOutlined, ShoppingCartOutlined, FileAddOutlined, OrderedListOutlined, LogoutOutlined } from '@ant-design/icons';
 
 
 import '../globals.css'
 
-import Provider from '../Provider';
 import StyledComponentsRegistry from '@/lib/AntdRegistry'
 
 
@@ -43,20 +44,18 @@ const items: MenuItem[] = [
     getItem('Alex', 'UserSub3'),
   ]),
   getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
+  getItem(<button onClick={() => signOut({ redirect: true, callbackUrl: "/login" })}>Logout</button>, '9', <LogoutOutlined />),
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children, session }: { children: React.ReactNode, session: Session }) {
 
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const { token: { colorBgContainer }, } = theme.useToken();
 
   return (
     <html lang="en">
       <body>
-        <Provider>
+        <SessionProvider session={session}>
           <StyledComponentsRegistry >
             <Layout style={{ minHeight: '100vh' }} hasSider>
               <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -78,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Layout>
             </Layout>
           </StyledComponentsRegistry>
-        </Provider>
+        </SessionProvider>
       </body>
     </html>
   )
