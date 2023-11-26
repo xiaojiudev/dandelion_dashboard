@@ -4,6 +4,8 @@ import { Table, Space, Tag, Button, Spin, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useSWR, { mutate, useSWRConfig } from 'swr';
 import { getSession } from 'next-auth/react';
+import Link from 'next/link'
+
 
 
 const fetcher = (url: any) => fetch(url).then(res => res.json())
@@ -127,7 +129,9 @@ export default function Product() {
     return (
         <div>
             <Spin spinning={isLoading || isDeleting}>
-                <Button type="primary" className='float-right mb-4' >Add</Button>
+                <Button type="primary" className='float-right mb-4' >
+                    <Link href="/product/1">Add</Link>
+                </Button>
                 <Table columns={columns} dataSource={dataSource} bordered />
             </Spin>
         </div>
