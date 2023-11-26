@@ -17,8 +17,8 @@ export default function Signin() {
 
     const { data: session, status } = useSession()
 
-    console.log("session: " + JSON.stringify(session));
-    console.log("status: " + JSON.stringify(status));
+    // console.log("session: " + JSON.stringify(session));
+    // console.log("status: " + JSON.stringify(status));
 
     const onFinish = async (values: any) => {
         console.log('Success:', values);

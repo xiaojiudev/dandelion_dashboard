@@ -1,3 +1,4 @@
+import { message } from "antd";
 import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -40,7 +41,7 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
         ],
         callbacks: {
             async jwt({ token, user, account }) {
-                console.log("account", account);
+                // console.log("account", account);
 
                 if (user && 'accessToken' in user) {
                     token.accessToken = user.accessToken;
@@ -50,7 +51,7 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
             },
             session({ session, token, user }) {
                 session.accessToken = token.accessToken as string;
-                console.log("Session", session);
+                // console.log("Session", session);
                 return session
             },
 
