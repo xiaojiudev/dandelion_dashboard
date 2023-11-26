@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, InputNumber, Select, Spin, Upload, message } from 'antd';
+import { Breadcrumb, Button, Form, Input, InputNumber, Select, Spin, Upload, message, theme } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { RcFile, UploadFile } from 'antd/es/upload';
 import { getSession } from 'next-auth/react';
@@ -135,7 +135,7 @@ export default function ProductForm() {
             } else {
                 message.error(`Failed to ${isEditing ? 'update' : 'create'} product`);
             }
-            
+
         } catch (error) {
             console.log('Something went wrong', error);
             message.error('Something went wrong')
@@ -157,64 +157,72 @@ export default function ProductForm() {
         return false;
     }
 
+    const { token: { colorBgContainer }, } = theme.useToken();
+
     return (
-        <div>
-            <Spin spinning={isSaving || loadingProductDetails}>
-                <Form
-                    {...layout}
-                    name="edit_product"
-                    onFinish={onSave}
-                    style={{ maxWidth: 600 }}
-                    validateMessages={validateMessages}
-                    form={form}
-                >
-                    <Form.Item name="name" label="Name" rules={[{ required: false }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="price" label="Price" rules={[{ type: 'number', min: 0, }]}>
-                        <InputNumber />
-                    </Form.Item>
-                    <Form.Item name="quantity" label="Quantity" rules={[{ type: 'number', min: 0, }]}>
-                        <InputNumber />
-                    </Form.Item>
-                    <Form.Item label="Upload" name="image" valuePropName="fileList" getValueFromEvent={normFile}>
-                        <Upload action="" listType="picture-card" beforeUpload={beforeUpload} maxCount={1}>
-                            {productDetails && productDetails.media_url ?
-                                (<div>
-                                    <img src={productDetails.media_url} className='w-20 h-20 rounded object-cover' />
-                                </div>)
-                                : (<div>
-                                    <PlusOutlined />
-                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                </div>)}
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item
-                        name="category"
-                        label="Category"
-                        hasFeedback
-                        rules={[{ required: true, message: 'Please select your category!' }]}
+        <>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item>Product</Breadcrumb.Item>
+                <Breadcrumb.Item>{id === 'news' ? "Add" : "Edit"} Products</Breadcrumb.Item>
+            </Breadcrumb>
+            <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+                <Spin spinning={isSaving || loadingProductDetails}>
+                    <Form
+                        {...layout}
+                        name="edit_product"
+                        onFinish={onSave}
+                        style={{ maxWidth: 600 }}
+                        validateMessages={validateMessages}
+                        form={form}
                     >
-                        <Select placeholder="Please select a category">
-                            {categories?.map((category) =>
-                                <Option value={category?.name} key={category.id}>
-                                    {category.name[0].toUpperCase() + category.name.slice(1)}
-                                </Option>)}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="description" label="Description">
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item name="information" label="Information">
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                        <Button type="primary" htmlType="submit" disabled={isSaving}>
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Spin>
-        </div>
+                        <Form.Item name="name" label="Name" rules={[{ required: false }]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="price" label="Price" rules={[{ type: 'number', min: 0, }]}>
+                            <InputNumber />
+                        </Form.Item>
+                        <Form.Item name="quantity" label="Quantity" rules={[{ type: 'number', min: 0, }]}>
+                            <InputNumber />
+                        </Form.Item>
+                        <Form.Item label="Upload" name="image" valuePropName="fileList" getValueFromEvent={normFile}>
+                            <Upload action="" listType="picture-card" beforeUpload={beforeUpload} maxCount={1}>
+                                {productDetails && productDetails.media_url ?
+                                    (<div>
+                                        <img src={productDetails.media_url} className='w-20 h-20 rounded object-cover' />
+                                    </div>)
+                                    : (<div>
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </div>)}
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item
+                            name="category"
+                            label="Category"
+                            hasFeedback
+                            rules={[{ required: true, message: 'Please select your category!' }]}
+                        >
+                            <Select placeholder="Please select a category">
+                                {categories?.map((category) =>
+                                    <Option value={category?.name} key={category.id}>
+                                        {category.name[0].toUpperCase() + category.name.slice(1)}
+                                    </Option>)}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name="description" label="Description">
+                            <Input.TextArea />
+                        </Form.Item>
+                        <Form.Item name="information" label="Information">
+                            <Input.TextArea />
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                            <Button type="primary" htmlType="submit" disabled={isSaving}>
+                                Submit
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Spin>
+            </div>
+        </>
     )
 }

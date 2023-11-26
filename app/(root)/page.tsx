@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from "next-auth/react"
-import { message } from "antd";
+import { Breadcrumb, message, theme } from "antd";
 import { useEffect, useState } from "react";
 
 
@@ -21,11 +21,19 @@ export default function Home() {
         };
     }, [status, username]);
 
+    const { token: { colorBgContainer }, } = theme.useToken();
 
     return (
-        <main >
-            Thong ke
 
-        </main>
+        <>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item>Overview</Breadcrumb.Item>
+                <Breadcrumb.Item>Statistic</Breadcrumb.Item>
+            </Breadcrumb>
+            <main style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+                Thong ke
+
+            </main>
+        </>
     )
 }

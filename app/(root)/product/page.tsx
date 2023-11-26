@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Table, Space, Tag, Button, Spin, message } from 'antd';
+import { Table, Space, Tag, Button, Spin, message, Breadcrumb, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useSWR, { mutate, useSWRConfig } from 'swr';
 import { getSession } from 'next-auth/react';
@@ -23,10 +23,8 @@ interface DataType {
 }
 
 
-
-
-
 export default function Product() {
+    const { token: { colorBgContainer }, } = theme.useToken();
 
     const columns: ColumnsType<DataType> = [
         {
@@ -128,11 +126,17 @@ export default function Product() {
     }))
 
     return (
-        <div>
-            <Spin spinning={isLoading || isDeleting}>
-                <Button type="primary" className='float-right mb-4' href='/product/news'>Add</Button>
-                <Table columns={columns} dataSource={dataSource} bordered />
-            </Spin>
-        </div>
+        <>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item>Product</Breadcrumb.Item>
+                <Breadcrumb.Item>All Products</Breadcrumb.Item>
+            </Breadcrumb>
+            <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+                <Spin spinning={isLoading || isDeleting}>
+                    <Button type="primary" className='float-right mb-4' href='/product/news'>Add</Button>
+                    <Table columns={columns} dataSource={dataSource} bordered />
+                </Spin>
+            </div>
+        </>
     )
 }
