@@ -5,6 +5,7 @@ import type { ColumnsType } from 'antd/es/table';
 import useSWR, { mutate, useSWRConfig } from 'swr';
 import { getSession } from 'next-auth/react';
 import Link from 'next/link'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 
 
@@ -64,8 +65,8 @@ export default function Product() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a href={`/product/${record.id}`}>Edit</a>
-                    <button onClick={() => deleteProduct(record.id)}>Delete</button>
+                    <Button href={`/product/${record.id}`} icon={<EditOutlined />} />
+                    <Button onClick={() => deleteProduct(record.id)} icon={<DeleteOutlined />} />
                 </Space>
             ),
         },
@@ -129,9 +130,7 @@ export default function Product() {
     return (
         <div>
             <Spin spinning={isLoading || isDeleting}>
-                <Button type="primary" className='float-right mb-4' >
-                    <Link href="/product/news">Add</Link>
-                </Button>
+                <Button type="primary" className='float-right mb-4' href='/product/news'>Add</Button>
                 <Table columns={columns} dataSource={dataSource} bordered />
             </Spin>
         </div>
