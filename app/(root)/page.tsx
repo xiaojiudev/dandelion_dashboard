@@ -6,17 +6,13 @@ import { useEffect, useState } from "react";
 
 
 export default function Home() {
-    const { data: session, status } = useSession()
-
-    const [isSuccessMessageShown, setIsSuccessMessageShown] = useState(false);
+    const { status } = useSession()
 
     useEffect(() => {
-        if (session && status === 'authenticated' && !isSuccessMessageShown) {
+        if (status === 'authenticated') {
             message.success('Login successful');
-            setIsSuccessMessageShown(true);
         }
-    }, [session, status, isSuccessMessageShown]);
-
+    }, [status]);
 
 
     return (
