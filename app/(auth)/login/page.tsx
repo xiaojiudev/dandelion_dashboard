@@ -32,7 +32,6 @@ export default function Signin() {
                 console.log(ok, error);
 
                 if (ok) {
-                    message.success('Login successfully', 2)
                     router.push("/");
                 } else {
                     console.log(error)
@@ -42,8 +41,8 @@ export default function Signin() {
 
             console.log(res);
         } catch (error) {
-            console.error('Login failed:', error);
-            message.error('Login failed. Please check your email and password!');
+            console.error('Something when wrong happened', error);
+            message.error('Something went wrong happened');
         }
 
     }
