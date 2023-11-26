@@ -64,7 +64,7 @@ export default function Product() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Edit</a>
+                    <a href={`/product/${record.id}`}>Edit</a>
                     <button onClick={() => deleteProduct(record.id)}>Delete</button>
                 </Space>
             ),
@@ -130,7 +130,7 @@ export default function Product() {
         <div>
             <Spin spinning={isLoading || isDeleting}>
                 <Button type="primary" className='float-right mb-4' >
-                    <Link href="/product/1">Add</Link>
+                    <Link href="/product/news">Add</Link>
                 </Button>
                 <Table columns={columns} dataSource={dataSource} bordered />
             </Spin>

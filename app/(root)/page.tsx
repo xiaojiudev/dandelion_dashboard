@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 
 
 export default function Home() {
-    const { status } = useSession()
+    const { data: session, status } = useSession()
+
+    const username = session?.user?.name
+    
 
     useEffect(() => {
         if (status === 'authenticated') {
-            message.success('Login successful');
+            message.success(`Hi ${username}. Welcome back!`);
         }
     }, [status]);
 
