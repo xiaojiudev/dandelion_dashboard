@@ -15,13 +15,11 @@ type SignInType = {
 export default function Signin() {
     const router = useRouter()
 
-    const { data: session, status } = useSession()
-
     // console.log("session: " + JSON.stringify(session));
     // console.log("status: " + JSON.stringify(status));
+    const { data: session, status } = useSession()
 
     const onFinish = async (values: any) => {
-        console.log('Success:', values);
 
         try {
             const res = await signIn("credentials", {
@@ -30,8 +28,8 @@ export default function Signin() {
                 password: values.password,
             }).then(({ ok, error }: any) => {
                 console.log(ok, error);
-
-                if (ok) {
+                
+                if (ok && session!.roles!.includes("ADMIN")) {
                     router.push("/");
                 } else {
                     console.log(error)

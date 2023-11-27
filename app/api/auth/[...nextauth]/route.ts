@@ -30,6 +30,8 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
                     })
 
                     const user = await res.json();
+                    console.log(user);
+                    
 
                     if (res.ok && user) {
                         return user;
@@ -45,12 +47,14 @@ const handler = async function auth(req: NextApiRequest, res: NextApiResponse) {
 
                 if (user && 'accessToken' in user) {
                     token.accessToken = user.accessToken;
+                    token.roles = user.roles;
                 }
 
                 return token;
             },
             session({ session, token, user }) {
                 session.accessToken = token.accessToken as string;
+                session.roles = token.roles as string[];
                 // console.log("Session", session);
                 return session
             },

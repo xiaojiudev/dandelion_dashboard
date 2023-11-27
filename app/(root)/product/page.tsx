@@ -72,12 +72,6 @@ export default function Product() {
 
     const { data, error, isLoading, mutate } = useSWR(`${process.env.baseURI}/products?size=1000`, fetcher)
 
-
-    console.log("Data", data);
-    console.log("Error", error);
-    console.log("Isloading", isLoading);
-
-
     const [isDeleting, setIsDeleting] = useState(false);
 
     const deleteProduct = async (productId: string) => {

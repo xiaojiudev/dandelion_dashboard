@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, CloseOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { Avatar, Breadcrumb, Button, Col, Divider, List, Popover, Row, Space, Table, Tag, message, theme } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import { getSession } from 'next-auth/react';
@@ -15,6 +15,12 @@ enum OrderStatus {
     CANCELED = "CANCELED",
     COMPLETED = "COMPLETED",
     REFUND = "REFUND",
+}
+
+enum TransactionStatus {
+    PENDING = "PENDING",
+    FAILED = "FAILED",
+    SUCCESS = "SUCCESS",
 }
 
 interface OrderType {
@@ -40,7 +46,20 @@ interface OrderDetail {
     product_name: string;
 }
 
+const transactionStatusColor = {
+    "PENDING": "gold",
+    "FAILED": "error",
+    "SUCCESS": "success",
+}
 
+const orderStatusColor: { [key in OrderStatus]: string } = {
+    "TO_PAY": "orange",
+    "PROCESSING": "processing",
+    "DELIVERING": "geekblue",
+    "CANCELED": "error",
+    "COMPLETED": "success",
+    "REFUND": "purple",
+}
 
 
 
@@ -100,7 +119,12 @@ export default function Order() {
             dataIndex: 'transaction_status',
             key: 'transaction_status',
             render: (text) => (
-                <Tag color="gold">{text}</Tag>
+                <Tag
+                    color={transactionStatusColor[text as keyof typeof transactionStatusColor]}
+                    icon={text === 'SUCCESS' ? <CheckCircleOutlined /> : text === 'FAILED' ? <CloseCircleOutlined /> : <SyncOutlined spin />}
+                >
+                    {text}
+                </Tag>
             )
         },
         {
@@ -108,18 +132,27 @@ export default function Order() {
             dataIndex: 'order_status',
             key: 'order_status',
             render: (text) => (
-                <Tag color="volcano">{text}</Tag>
+                <Tag
+                    color={orderStatusColor[text as keyof typeof orderStatusColor]}
+                    icon={text === 'COMPLETED' ? <CheckCircleOutlined /> : text === 'CANCELED' ? <CloseCircleOutlined /> : <SyncOutlined spin />}
+                >
+                    {text}
+                </Tag>
             )
         },
         {
             title: 'Action',
             key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button onClick={() => setOrderStatus(record.id, OrderStatus.CANCELED)} icon={<CloseOutlined style={{ color: '#e93445' }} />} />
-                    <Button onClick={() => setOrderStatus(record.id, OrderStatus.DELIVERING)} icon={<CheckOutlined style={{ color: '#1cc487' }} />} />
-                </Space>
-            ),
+            render: (_, record) => {
+                const isOrderProcessed = record.order_status !== OrderStatus.PROCESSING;
+
+                return (
+                    <Space size="middle">
+                        <Button onClick={() => setOrderStatus(record.id, OrderStatus.CANCELED)} disabled={isOrderProcessed} icon={<CloseOutlined style={{ color: '#e93445' }} />} />
+                        <Button onClick={() => setOrderStatus(record.id, OrderStatus.DELIVERING)} disabled={isOrderProcessed} icon={<CheckOutlined style={{ color: '#1cc487' }} />} />
+                    </Space>
+                )
+            },
         },
 
     ];
