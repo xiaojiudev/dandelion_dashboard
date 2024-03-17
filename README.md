@@ -9,6 +9,8 @@
 ## Related Repositories
 **Backend:** [Here](https://github.com/xiaojiudev/dandelion_backend.git)
 
+**Frontend:** [Here](https://github.com/xiaojiudev/dandelion_frontend.git)
+
 **Dashboard:** [Here](https://github.com/xiaojiudev/dandelion_dashboard.git)
 
 ## 🚀 Project Overview
